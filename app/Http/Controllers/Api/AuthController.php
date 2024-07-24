@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Auth\Events\Registered; 
 use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Models\Profile;
@@ -28,10 +29,14 @@ class AuthController extends Controller
 
         $token = $user->createToken('api-token')->plainTextToken;
 
+        // event to create a profile for the user
         event( new UserRegistered($user));
+        // event to send Send Email Verification Notification
+        // event(new Registered($user));
 
         return response()->json([
-            'token' => $token
+            'token' => $token,
+            'message' => 'User registered successfully. Please check your email for verification link.'
         ]);
     }
 
